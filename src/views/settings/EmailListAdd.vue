@@ -39,12 +39,12 @@
 
     <hr class="mb-8 max-w-screen-lg m-auto" />
 
-    <div class="container">
+    <div class="container mb-8 m-auto">
       <form @submit.prevent="uploadCsv">
-        <div class="flex">
-          Upload
-          <label for="csv"><img :src="plus"/></label>
-          <input id="csv" type="file" class="hidden" accept=".csv" />
+        <div class="max-w-lg">
+          <label for="csv">Upload</label>
+          <input name="csv" type="file" accept=".csv" />
+          <input type="submit" value="Submit" />
         </div>
       </form>
     </div>
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     goBack() {
-      console.log('hello');
+      console.log('go back');
     },
     uploadCsv() {
       console.log('submitted');
@@ -85,9 +85,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-input[type='file'] {
-  display: none;
-}
-</style>
