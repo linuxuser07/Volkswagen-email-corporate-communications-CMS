@@ -54,9 +54,9 @@
 <script>
 import back from '@/assets/icons/back.png';
 import plus from '@/assets/icons/plus.png';
-import stepTwo from '@/assets/email-list-instructions/step2.png';
-import stepThree from '@/assets/email-list-instructions/step3.png';
-import stepFour from '@/assets/email-list-instructions/step4.png';
+import stepTwo from '@/assets/email-list-add/step2.png';
+import stepThree from '@/assets/email-list-add/step3.png';
+import stepFour from '@/assets/email-list-add/step4.png';
 import NavHeader from '@/components/NavHeader.vue';
 
 export default {

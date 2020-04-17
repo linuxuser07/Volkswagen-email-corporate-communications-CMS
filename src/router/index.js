@@ -39,15 +39,12 @@ const routes = [
     }
   },
   {
-    path: '/settings/email-campaign/email-lists/add',
+    path: '/settings/email-campaign/lists/add',
     name: 'EmailListAdd',
     component: EmailListAdd,
     meta: {
       requiresAuth: true
     }
-  },
-  {
-    path: '/settings/'
   }
 ];
 
