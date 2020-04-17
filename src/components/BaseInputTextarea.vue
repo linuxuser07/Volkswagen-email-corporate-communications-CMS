@@ -1,15 +1,24 @@
 <template>
   <div class="mb-4 relative">
     <textarea
-      class="input disable-scrollbars appearance-none relative bg-transparent border border-gray-600 rounded h-32 w-full px-4 py-3 focus:outline-none focus:border-gray-500 active:border-gray-500 focus:shadow-md active:shadow-md"
-      :class="value.length > 0 ? 'filled' : ''"
+      class="input disable-scrollbars appearance-none relative bg-transparent border rounded h-32 w-full px-4 py-3 focus:outline-none focus:shadow-md active:shadow-md"
+      :class="[
+        { filled: value.length > 0 },
+        error
+          ? 'border-red-600 focus:border-red-600 active:border-red-600'
+          : 'border-gray-600 focus:border-gray-500 active:border-gray-500'
+      ]"
       :value="value"
-      @input="$emit('input', $event.target.value)"
+      @blur="$emit('input', $event.target.value)"
       :placeholder="placeholder || label"
     ></textarea>
-    <label class="label absolute mb-0 top-0 left-0 mt-3 ml-3 cursor-text text-gray-500">
+    <label
+      class="label bg-inherit absolute mb-0 top-0 left-0 mt-3 ml-3 cursor-text"
+      :class="error ? 'text-red-600' : 'text-gray-500'"
+    >
       {{ label }}
     </label>
+    <slot></slot>
   </div>
 </template>
 
@@ -27,6 +36,9 @@ export default {
     },
     placeholder: {
       type: String
+    },
+    error: {
+      default: Boolean
     }
   },
   data() {
@@ -45,9 +57,6 @@ export default {
   line-height: inherit;
 }
 
-.input + .label {
-  background-color: rgba(255, 255, 255, 0);
-}
 .input:focus + .label,
 .input:active + .label,
 .input.filled + .label {
@@ -59,7 +68,6 @@ export default {
   z-index: 3;
   will-change: transform;
   transition: transform 200ms ease-out, background-color 100ms ease-out 150ms;
-  background-color: rgba(255, 255, 255, 1);
 }
 
 .input:focus::placeholder {

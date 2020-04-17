@@ -1,38 +1,45 @@
 <template>
   <div>
-    <form ref="form" name="Login" @submit.prevent="" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form ref="form" name="Login" @submit.prevent="" class="pt-6 pb-8 mb-4 text-left">
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-          E-mail
-        </label>
-        <input
-          v-model="email"
-          name="E-mail"
-          required
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="username"
-          type="email"
-          placeholder="E-mail address"
-        />
+        <BaseInputText
+          class="bg-primary text-white"
+          v-model="$v.email.$model"
+          label="Email"
+          placeholder="Email"
+          :error="$v.email.$dirty && (!$v.email.required || !$v.email.email)"
+        >
+          <span v-if="$v.email.$dirty && !$v.email.required" class="text-xs text-error">
+            Email is required
+          </span>
+          <span v-if="$v.email.$dirty && !$v.email.email" class="text-xs text-error">
+            Please enter valid email
+          </span>
+        </BaseInputText>
+      </div>
+      <div class="mb-4">
+        <BaseInputText
+          class="bg-primary text-white"
+          v-model="$v.password.$model"
+          label="Password"
+          placeholder="Password"
+          type="password"
+          :error="$v.password.$dirty && !$v.password.required"
+        >
+          <span v-if="$v.password.$dirty && !$v.password.required" class="text-xs text-error">
+            Password is required
+          </span>
+        </BaseInputText>
       </div>
       <div class="mb-6">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-          Password
-        </label>
-        <input
-          v-model="password"
-          name="Password"
-          required
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-          id="password"
-          type="password"
-          placeholder="Your password"
-        />
-        <!-- <p class="text-red-500 text-xs italic">Please choose a password.</p> -->
+        <span v-if="loginError.length > 0" class="text-xs text-error">
+          {{ loginError }}
+        </span>
       </div>
       <div class="flex items-center justify-between">
+        <!-- submit button -->
         <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          class="bg-secondary w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition duration-100 ease-in-out transition-all label-mobile"
           type="button"
           @click="submit()"
         >
@@ -44,7 +51,7 @@
       </div>
     </form>
 
-    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <!-- <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <p class="mb-4">
         <a
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -59,29 +66,27 @@
           >Login by Google</a
         >
       </p>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import store from '@/store';
 import isEmail from 'validator/lib/isEmail';
+import BaseInputText from '@/components/BaseInputText.vue';
+import { required, email } from 'vuelidate/lib/validators';
 
 export default {
   name: 'AuthLogin',
-  data() {
-    return {
-      valid: false,
-      isPasswordVisible: false,
-      rules: {
-        email: [
-          v => !!v || 'E-mail is required',
-          v => (v || '').indexOf(' ') < 0 || 'No spaces are allowed',
-          v => isEmail(v) || 'E-mail must be valid'
-        ],
-        password: [v => !!v || 'Password is required']
-      }
-    };
+  components: { BaseInputText },
+  validations: {
+    email: {
+      required,
+      email
+    },
+    password: {
+      required
+    }
   },
   beforeDestroy() {
     this.cleanup();
@@ -93,13 +98,14 @@ export default {
     updateActiveState(value) {
       this.$store.dispatch('auth/updateActiveState', value);
     },
-    async submit() {
-      try {
-        await this.login();
-        this.$router.push({ name: 'Home' });
-      } catch (error) {
-        this.$store.dispatch('auth/updateLoginError', error.message);
+    submit() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return false;
       }
+      this.login().then(() => {
+        this.$emit('success');
+      });
     },
     async login() {
       await this.$store.dispatch('auth/loginStandard');

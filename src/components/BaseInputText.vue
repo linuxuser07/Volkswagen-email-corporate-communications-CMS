@@ -1,18 +1,20 @@
 <template>
   <div class="mb-4 relative">
     <input
-      class="input appearance-none outline-none relative bg-transparent border border-gray-600 rounded w-full px-4 py-3 focus:shadow-md active:shadow-md"
+      class="input appearance-none outline-none relative bg-transparent border rounded w-full px-4 py-3 focus:shadow-md active:shadow-md"
       :class="[
         { filled: value.length > 0 },
-        error ? 'focus:border-red-600 active:border-red-600' : 'focus:border-gray-500 active:border-gray-500'
+        error
+          ? 'border-red-600 focus:border-red-600 active:border-red-600'
+          : 'border-gray-600 focus:border-gray-500 active:border-gray-500'
       ]"
       :type="type"
       :value="value"
-      @input="$emit('input', $event.target.value)"
+      @blur="$emit('input', $event.target.value)"
       :placeholder="placeholder || label"
     />
     <label
-      class="label bg-surface absolute mb-0 top-0 left-0 mt-3 ml-3 cursor-text"
+      class="label bg-inherit absolute mb-0 top-0 left-0 mt-3 ml-3 cursor-text"
       :class="error ? 'text-red-600' : 'text-gray-500'"
     >
       {{ label }}
@@ -58,9 +60,21 @@ export default {
   z-index: 2;
 }
 
-.input + .label {
-  background-color: rgba(255, 255, 255, 0);
+/* purgecss start ignore */
+@-webkit-keyframes autofill {
+  0%,
+  100% {
+    color: inherit;
+    background: transparent;
+  }
 }
+.input:-webkit-autofill {
+  -webkit-animation-delay: 1s; /* Safari support - any positive time runs instantly */
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+}
+/* purgecss end ignore */
+
 .input:focus + .label,
 .input:active + .label,
 .input.filled + .label {
@@ -72,7 +86,6 @@ export default {
   z-index: 3;
   will-change: transform;
   transition: transform 200ms ease-out, background-color 50ms ease-out 150ms;
-  background-color: rgba(255, 255, 255, 1);
   border-radius: 100px;
 }
 
