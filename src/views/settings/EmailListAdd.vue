@@ -13,7 +13,7 @@
           Email address is the only field that we require, but you can repeat this step for any other contact data
           fields you want to included.
         </p>
-        <p><img :src="stepTwo" class="m-auto" /></p>
+        <p><img :src="stepTwo" class="md:max-w-md lg:max-w-lg m-auto" /></p>
       </div>
 
       <div class="mb-6">
@@ -21,12 +21,12 @@
           3. Next to your Email Address column, create and label additional columns for
           <span class="text-bold">First Name</span> and <span class="text-bold">Last Name</span>.
         </p>
-        <p><img :src="stepThree" class="m-auto" /></p>
+        <p><img :src="stepThree" class="md:max-w-md lg:max-w-lg m-auto" /></p>
       </div>
 
       <div class="mb-6">
         <p class="mb-6">4. Paste your contacts’ information into the relevant fields in the spreadsheet</p>
-        <p><img :src="stepFour" class="h-auto m-auto" /></p>
+        <p><img :src="stepFour" class="md:max-w-md lg:max-w-lg m-auto" /></p>
       </div>
 
       <div>
