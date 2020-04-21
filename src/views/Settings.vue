@@ -38,17 +38,14 @@
           />
         </svg>
       </a>
-      <!-- <AuthLogin v-if="!isAuthenticated" /> -->
     </div>
   </div>
 </template>
 <script>
 import PageNavigation from '@/components/PageNavigation.vue';
-import AuthLogin from '@/components/AuthLogin';
 
 export default {
   name: 'SettingsPage',
-  // components: { AuthLogin },
   computed: {
     isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated'];
