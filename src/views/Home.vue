@@ -1,10 +1,10 @@
 <template>
   <div class="bg-brand-gradient flex items-center justify-center min-h-full relative">
-    <div class="w-full">
+    <div class="w-full" v-if="loadingScreen(isLoading)">
       <router-link v-if="isAuthenticated" to="/settings" class="absolute top-0 right-0 text-white p-4 text-sm">
         <img src="https://res.cloudinary.com/whynotearth/image/upload/v1587275972/Volkswagen/cms/wheel_2_rk5nr4.png" />
       </router-link>
-      <div class="max-w-sm mx-auto px-6">
+      <div class="max-w-sm mx-auto px-6" v-if="!isLoading">
         <div class="mb-6">
           <img
             class="w-16 h-16 mx-auto block"
@@ -40,6 +40,7 @@
 import store from '@/store';
 import isEmail from 'validator/lib/isEmail';
 import AuthLogin from '@/components/AuthLogin';
+import { sleep } from '@/helpers.js';
 
 export default {
   name: 'LoginPage',
@@ -47,8 +48,29 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated'];
+    },
+    isLoading() {
+      this.loadingScreen();
+      return this.$store.getters['loading/isLoading'];
     }
   },
-  methods: {}
+  methods: {
+    async loadingScreen(val) {
+      if (val) {
+        this.$store.commit('overlay/updateModel', {
+          title: ' ',
+          message: ''
+        });
+        return false;
+      } else {
+        await sleep(1000);
+        this.$store.commit('overlay/updateModel', {
+          title: '',
+          message: ''
+        });
+        return true;
+      }
+    }
+  }
 };
 </script>
